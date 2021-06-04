@@ -10,7 +10,7 @@ class Users {
         this.users = [];
     }
 
-    addUser(id, name, room) {
+    addUser(id, name, room, user1) {
         let user = { id, name, room, user1 };
         this.users.push(user);
         return user;
