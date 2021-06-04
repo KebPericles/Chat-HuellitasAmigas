@@ -44,7 +44,12 @@ io.on('connection', (socket) => {
 
                     socket.join(params.room);
                     users.removeUser(socket.id);
-                    users.addUser(socket.id, params.idUsuario, params.room);
+                    if (params.idUsuario == idUsuario1) {
+                        users.addUser(socket.id, params.idUsuario, params.room, true);
+                    } else {
+                        users.addUser(socket.id, params.idUsuario, params.room, false);
+                    }
+
 
                     io.to(params.room).emit('updateUsersList', users.getUserList(params.room));
                     socket.emit('newMessage', generateMessage('Admin', `Welocome to ${params.room}!`));
