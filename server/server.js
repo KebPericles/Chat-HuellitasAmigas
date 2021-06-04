@@ -31,7 +31,7 @@ io.on('connection', (socket) => {
 
     //Se une un usuario a un room por su idUsuario, idChat y 
     socket.on('join', (params, callback) => {
-        if (!isRealString(params.name) || !isRealString(params.room)) {
+        if (!isRealString(params.idUsuario) || !isRealString(params.room)) {
             return callback('Name and room are required');
         }
 
@@ -40,11 +40,11 @@ io.on('connection', (socket) => {
                 console.log(rows[0])
                 var idUsuario1 = rows[0].idUsuario1;
                 var idUsuario2 = rows[0].idUsuario2;
-                if (params.name == idUsuario1 || params.name == idUsuario2) {
+                if (params.idUsuario == idUsuario1 || params.idUsuario == idUsuario2) {
 
                     socket.join(params.room);
                     users.removeUser(socket.id);
-                    users.addUser(socket.id, params.name, params.room);
+                    users.addUser(socket.id, params.idUsuario, params.room);
 
                     io.to(params.room).emit('updateUsersList', users.getUserList(params.room));
                     socket.emit('newMessage', generateMessage('Admin', `Welocome to ${params.room}!`));
