@@ -76,14 +76,14 @@ io.on('connection', (socket) => {
             //ver de que usuario proviene e insertar el msj en la bd
             console.log("mensaje");
             if (user.user1) {
-                mysqlConnection.query("INSERT INTO MensajeChat(idChat, usuario1, mensaje) VALUES(?, true, ?);", [user.name, message.text], (err, rows, field) => {
+                mysqlConnection.query("INSERT INTO MensajeChat(idChat, usuario1, mensaje) VALUES(" + user.room + ", false, ?);", [message.text], (err, rows, field) => {
                     if (!err)
                         io.to(user.room).emit('newMessage', generateMessage(user.name, message.text));
                     else
                         console.log(err);
                 });
             } else if (!user.user1) {
-                mysql.query("INSERT INTO MensajeChat(idChat, usuario1, mensaje) VALUES(" + user.room + ", false, ?);", [message.text], (err, rows, field) => {
+                mysqlConnection.query("INSERT INTO MensajeChat(idChat, usuario1, mensaje) VALUES(" + user.room + ", false, ?);", [message.text], (err, rows, field) => {
                     if (!err)
                         io.to(user.room).emit('newMessage', generateMessage(user.name, message.text));
                     else
