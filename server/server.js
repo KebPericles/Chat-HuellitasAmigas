@@ -83,7 +83,7 @@ io.on('connection', (socket) => {
                         console.log(err);
                 });
             } else if (!user.user1) {
-                mysql.query("INSERT INTO MensajeChat(idChat, usuario1, mensaje) VALUES(?, false, ?);", [user.name, message.text], (err, rows, field) => {
+                mysql.query("INSERT INTO MensajeChat(idChat, usuario1, mensaje) VALUES(" + user.name + ", false, ?);", [message.text], (err, rows, field) => {
                     if (!err)
                         io.to(user.room).emit('newMessage', generateMessage(user.name, message.text));
                     else
