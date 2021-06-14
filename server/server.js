@@ -30,9 +30,7 @@ let app = express();
 let server = https.createServer({
     key: fs.readFileSync(ruta + 'privkey.pem'),
     cert: fs.readFileSync(ruta + 'fullchain.pem')
-}, app).listen(port, function() {
-    console.log("My HTTPS server listening on port " + PORT + "...");
-});
+}, app);
 
 let io = socketIO(server);
 let users = new Users();
