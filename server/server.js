@@ -1,8 +1,13 @@
 const path = require('path');
-const http = require('http');
+const https = require('https');
 const express = require('express');
 const socketIO = require('socket.io');
 const mysql = require('mysql');
+
+//CONSTANTES
+const port = process.env.PORT || 3000;
+const ruta = '/etc/letsencrypt/live/huellitasamigas.tech/';
+
 
 //MySQL details
 var mysqlConnection = mysql.createConnection({
@@ -18,9 +23,16 @@ const { isRealString } = require('./utils/isRealString');
 const { Users } = require('./utils/users');
 
 const publicPath = path.join(__dirname, '/../public');
-const port = process.env.PORT || 3000
+
+//SERVER
 let app = express();
-let server = http.createServer(app);
+let server = https.createServer({
+    key: fs.readFileSync(ruta + 'privkey.pem'),
+    cert: fs.readFileSync(ruta + 'fullchain.pem')
+}, app).listen(port, function() {
+    console.log("My HTTPS server listening on port " + PORT + "...");
+});
+
 let io = socketIO(server);
 let users = new Users();
 
@@ -76,7 +88,7 @@ io.on('connection', (socket) => {
             //ver de que usuario proviene e insertar el msj en la bd
             console.log("mensaje");
             if (user.user1) {
-                mysqlConnection.query("INSERT INTO MensajeChat(idChat, usuario1, mensaje) VALUES(" + user.room + ", false, ?);", [message.text], (err, rows, field) => {
+                mysqlConnection.query("INSERT INTO MensajeChat(idChat, usuario1, mensaje) VALUES(" + user.room + ", true, ?);", [message.text], (err, rows, field) => {
                     if (!err)
                         io.to(user.room).emit('newMessage', generateMessage(user.name, message.text));
                     else
