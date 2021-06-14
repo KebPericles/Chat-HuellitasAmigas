@@ -3,6 +3,7 @@ const https = require('https');
 const express = require('express');
 const socketIO = require('socket.io');
 const mysql = require('mysql');
+const fs = require('fs');
 
 //CONSTANTES
 const port = process.env.PORT || 3000;
